@@ -16,10 +16,10 @@ const db = new sqlite3.Database(dbPath, (err) => {
     console.log("Connected to the SQLite database.");
     db.run(
       `CREATE TABLE IF NOT EXISTS rsvp (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name text, 
-            adults integer, 
-            children integer
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT UNIQUE, 
+    adults INTEGER, 
+    children INTEGER
         )`,
       (err) => {
         if (err) {
@@ -51,10 +51,18 @@ app.post("/submit", (req, res) => {
         throw err;
       }
 
-      let totalAttendees = rows.reduce((acc, row) => acc + row.adults + row.children, 0);
-      let responseHtml = rows.map((row) => `<p>${row.name} - Adults: ${row.adults}, Children: ${row.children}</p>`).join("");
-      responseHtml += `<p>Total Attendees: ${totalAttendees}</p>`;
-      res.send(responseHtml);
+      let totalAdults = rows.reduce((acc, row) => acc + row.adults, 0);
+      let totalChildren = rows.reduce((acc, row) => acc + row.children, 0);
+      let totalAttendees = totalAdults + totalChildren;
+
+      let tableHtml = `<table><tr><th>Name</th><th>Adults</th><th>Children</th></tr>`;
+      rows.forEach((row) => {
+        tableHtml += `<tr><td>${row.name}</td><td>${row.adults}</td><td>${row.children}</td></tr>`;
+      });
+      tableHtml += `<tr><td><strong>Totals</strong></td><td>${totalAdults}</td><td>${totalChildren}</td></tr>`;
+      tableHtml += `</table><p>Total Attendees: ${totalAttendees}</p>`;
+
+      res.send(tableHtml);
     });
   });
 });
@@ -82,6 +90,31 @@ app.post("/clear", (req, res) => {
       return;
     }
     res.send("Cleared");
+  });
+});
+
+app.post("/reset-table", (req, res) => {
+  const dropSql = "DROP TABLE IF EXISTS rsvp";
+  const createSql = `CREATE TABLE rsvp (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT UNIQUE, 
+        adults INTEGER, 
+        children INTEGER
+    )`;
+
+  db.run(dropSql, (err) => {
+    if (err) {
+      res.status(500).send("Error dropping table: " + err.message);
+      return;
+    }
+
+    db.run(createSql, (err) => {
+      if (err) {
+        res.status(500).send("Error creating table: " + err.message);
+        return;
+      }
+      res.send("Table reset successfully");
+    });
   });
 });
 
