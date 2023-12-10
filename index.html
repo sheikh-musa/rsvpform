@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>RSVP Form</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
@@ -56,6 +57,21 @@
       .rsvp-list p {
         margin: 10px 0;
         line-height: 1.5;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .rsvp-form,
+        .rsvp-list {
+          width: 90%;
+          margin: 10px;
+        }
+
+        .rsvp-form input[type="text"],
+        .rsvp-form input[type="number"],
+        .rsvp-form button {
+          width: calc(100% - 20px);
+        }
       }
     </style>
   </head>
