@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>RSVP Form</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        margin: 0;
+      }
+      .rsvp-form {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+      }
+      .rsvp-form form {
+        display: flex;
+        flex-direction: column;
+      }
+      .rsvp-form label {
+        margin-bottom: 5px;
+      }
+      .rsvp-form input[type="text"],
+      .rsvp-form input[type="number"] {
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+      }
+      .rsvp-form button {
+        padding: 10px 20px;
+        background-color: #0056b3;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      .rsvp-form button:hover {
+        background-color: #004494;
+      }
+      .rsvp-list {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        width: 300px;
+      }
+      .rsvp-list p {
+        margin: 10px 0;
+        line-height: 1.5;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="rsvp-form">
+      <h2>Haul Mu'alim Sheikh Umar Bagharib</h2>
+      <form id="rsvpForm">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required /><br /><br />
+
+        <label for="adults">Number of Adults:</label>
+        <input type="number" id="adults" name="adults" min="0" value="0" required /><br /><br />
+
+        <label for="children">Number of Children:</label>
+        <input type="number" id="children" name="children" min="0" value="0" required /><br /><br />
+
+        <button type="submit">RSVP</button>
+      </form>
+    </div>
+
+    <div class="rsvp-list" id="rsvpList">
+      <!-- RSVP list will be populated here -->
+    </div>
+    <!-- <script>
+      $(document).ready(function () {
+        $("#rsvpForm").on("submit", function (e) {
+          e.preventDefault();
+          var formData = $(this).serialize();
+          $.post("/submit", formData, function (response) {
+            $("#rsvpList").html(response);
+          });
+        });
+      });
+    </script> -->
+    <script>
+      $(document).ready(function () {
+        // Fetch and display RSVPs when the page loads
+        fetchRSVPs();
+
+        $("#rsvpForm").on("submit", function (e) {
+          e.preventDefault();
+          var adults = parseInt($("#adults").val());
+          var children = parseInt($("#children").val());
+
+          // Check if both adults and children are 0
+          if (adults === 0 && children === 0) {
+            alert("Please enter at least one adult or child.");
+            return; // Prevent form submission
+          }
+
+          var formData = $(this).serialize();
+          $.post("/submit", formData, function (response) {
+            $("#rsvpList").html(response);
+          });
+        });
+
+        // Function to fetch and display RSVPs
+        function fetchRSVPs() {
+          $.get("/rsvps", function (data) {
+            $("#rsvpList").html(data);
+          });
+        }
+      });
+    </script>
+  </body>
+</html>
