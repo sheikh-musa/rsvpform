@@ -132,6 +132,13 @@
       });
     </script> -->
     <script>
+      // Function to fetch and display RSVPs
+      function fetchRSVPs() {
+        $.get("/rsvps", function (data) {
+          $("#rsvpList").html(data);
+        });
+      }
+
       $(document).ready(function () {
         // Fetch and display RSVPs when the page loads
         fetchRSVPs();
@@ -149,16 +156,9 @@
 
           var formData = $(this).serialize();
           $.post("/submit", formData, function (response) {
-            $("#rsvpList").html(response);
+            fetchRSVPs();
           });
         });
-
-        // Function to fetch and display RSVPs
-        function fetchRSVPs() {
-          $.get("/rsvps", function (data) {
-            $("#rsvpList").html(data);
-          });
-        }
       });
     </script>
   </body>
