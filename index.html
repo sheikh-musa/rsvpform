@@ -83,24 +83,26 @@
       tr:hover {
         background-color: #f1f1f1;
       }
-      #rsvpList {
-        max-height: 2000px; /* Adjust this value to fit your needs */
-        overflow-y: auto;
+
+      .rsvp-form,
+      .rsvp-list {
+        width: 100%;
+        box-sizing: border-box;
       }
 
-      /* Responsive Design */
-      @media (max-width: 768px) {
+      @media (min-width: 768px) {
+        body {
+          flex-direction: row;
+        }
         .rsvp-form,
         .rsvp-list {
-          width: 90%;
-          margin: 10px;
+          width: 50%;
         }
+      }
 
-        .rsvp-form input[type="text"],
-        .rsvp-form input[type="number"],
-        .rsvp-form button {
-          width: calc(100% - 20px);
-        }
+      #rsvpList {
+        height: 500px; /* Adjust this value to fit your needs */
+        overflow-y: auto;
       }
     </style>
   </head>
@@ -114,7 +116,7 @@
         <label for="adults">Number of Adults:</label>
         <input type="number" id="adults" name="adults" min="0" value="0" required /><br /><br />
 
-        <label for="children">Number of Children:</label>
+        <label for="children">Number of Children (below 7 years):</label>
         <input type="number" id="children" name="children" min="0" value="0" required /><br /><br />
 
         <button type="submit">RSVP</button>
@@ -122,6 +124,8 @@
     </div>
 
     <div class="rsvp-list" id="rsvpList">
+      <h2>RSVP List</h2>
+      <div id="rsvpList"></div>
       <!-- RSVP list will be populated here -->
     </div>
     <!-- <script>
